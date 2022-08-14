@@ -7,15 +7,16 @@
   "type": "module",
   "exports": "./build/index.js",
   "scripts": {
-    "dev": "concurrently \"npx tsc --watch\" \"nodemon -q ./build/index.js\"",
+    "dev": "cross-env NODE_ENV=development concurrently \"npx tsc --watch\" \"nodemon -q ./build/index.js\"",
     "build": "npx tsc",
-    "start": "yarn build && node ./build/index.js"
+    "start": "yarn build && cross-env NODE_ENV=production node ./build/index.js"
   },
   "devDependencies": {
     "@types/cron": "^2.0.0",
     "@types/node": "^18.7.3",
     "concurrently": "^7.3.0",
     "cron": "^2.1.0",
+    "cross-env": "^7.0.3",
     "dotenv": "^16.0.1",
     "node-fetch": "^3.2.10",
     "nodemon": "^2.0.19",

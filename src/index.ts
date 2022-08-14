@@ -14,10 +14,20 @@ const callServiceIngestNewStoriesFromHNJob = new cron.CronJob(
         `starting scheduled service call for ingesting new stories from HN with max of ${process.env.SOURCE_HN_MAX_NEW_STORIES}`
       )
 
-      await fetch(
-        `https://www.meatballs.live/api/services/ingest/new-stories?apiKey=${process.env.INGEST_API_KEY}&dataSource=hn&max=${process.env.SOURCE_HN_MAX_NEW_STORIES}`,
-        { method: 'GET' }
-      )
+      const requestUrl = `${
+        process.env.NODE_ENV === 'development'
+          ? 'http://localhost:3000'
+          : 'https://www.meatballs.live'
+      }/api/services/ingest/new-stories?dataSource=hn&max=${
+        process.env.SOURCE_HN_MAX_NEW_STORIES
+      }`
+
+      await fetch(requestUrl, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${process.env.INGEST_API_KEY}`
+        }
+      })
 
       const msToComplete = Date.now() - startTime
 
@@ -31,7 +41,7 @@ const callServiceIngestNewStoriesFromHNJob = new cron.CronJob(
     }
   },
   null,
-  false,
+  true,
   'America/Chicago',
   null
 )
