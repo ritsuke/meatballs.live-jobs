@@ -9,7 +9,7 @@
   "scripts": {
     "dev": "cross-env NODE_ENV=development concurrently \"npx tsc --watch\" \"nodemon --experimental-modules --es-module-specifier-resolution=node -q ./build/index.js\"",
     "build": "npx tsc",
-    "start": "yarn build && cross-env NODE_ENV=production node ./build/index.js"
+    "start": "yarn build && cross-env NODE_ENV=production node --experimental-specifier-resolution=node ./build/index.js"
   },
   "devDependencies": {
     "@types/cron": "^2.0.0",
