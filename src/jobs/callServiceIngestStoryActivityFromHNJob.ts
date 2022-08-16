@@ -52,7 +52,7 @@ export default new cron.CronJob(
     }
   },
   null,
-  true,
+  false,
   'America/Chicago',
   null
 )

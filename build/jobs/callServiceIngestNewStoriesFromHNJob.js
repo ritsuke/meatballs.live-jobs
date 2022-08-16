@@ -30,4 +30,4 @@ export default new cron.CronJob(process.env.SOURCE_HN_NEW_STORIES_CRON_TIME || '
     catch (error) {
         console.error(`[ERROR:NewStories] ${error.message}`);
     }
-}), null, true, 'America/Chicago', null);
+}), null, false, 'America/Chicago', null);
