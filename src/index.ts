@@ -17,7 +17,7 @@ if (process.env.SOURCE_HN_NEW_STORIES_PAUSED !== 'true') {
 }
 
 if (process.env.SOURCE_HN_NEW_STORIES_PAUSED === 'true') {
-  console.info(
+  console.warn(
     `[WARN:NewStories] call service job for ingesting new stories from source HN is paused`
   )
 }
@@ -31,7 +31,7 @@ if (process.env.SOURCE_HN_STORY_ACTIVITY_PAUSED !== 'true') {
 }
 
 if (process.env.SOURCE_HN_STORY_ACTIVITY_PAUSED === 'true') {
-  console.info(
+  console.warn(
     `[WARN:StoryActivity] call service job for ingesting story activity from source HN is paused`
   )
 }

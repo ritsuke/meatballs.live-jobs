@@ -14,18 +14,19 @@ import fetch from 'node-fetch';
 export default new cron.CronJob(process.env.SOURCE_HN_NEW_STORIES_CRON_TIME || '* * * * *', () => __awaiter(void 0, void 0, void 0, function* () {
     try {
         const startTime = Date.now();
-        console.info(`[INFO:NewStories] starting scheduled service call for ingesting new stories from HN with max of ${process.env.SOURCE_HN_MAX_NEW_STORIES}`);
+        console.info(`[INFO:NewStories] starting scheduled service call for ingesting new stories from HN with limit of ${process.env.SOURCE_HN_NEW_STORIES_LIMIT}`);
         const requestUrl = `${process.env.NODE_ENV === 'development'
             ? 'http://localhost:3000'
-            : 'https://www.meatballs.live'}/api/services/ingest/new-stories?dataSource=hn&max=${process.env.SOURCE_HN_MAX_NEW_STORIES}`;
+            : 'https://www.meatballs.live'}/api/services/ingest/new-stories?dataSource=hn&limit=${process.env.SOURCE_HN_NEW_STORIES_LIMIT}`;
         const response = yield fetch(requestUrl, {
             method: 'POST',
             headers: {
                 Authorization: `Bearer ${process.env.INGEST_API_KEY}`
             }
-        }), { totalStoriesSaved } = (yield response.json()).data, msToComplete = Date.now() - startTime;
-        // TODO: post msToComplete to _status service
-        console.info(`[INFO:NewStories] completed scheduled service call for ingesting new stories from HN in ${msToComplete}ms, saving ${totalStoriesSaved} new stories`);
+        }), { total_stories_saved, total_users_saved } = (yield response.json()).data, msToComplete = Date.now() - startTime;
+        // TODO: post msToComplete to _logs service
+        console.info(`[INFO:NewStories] completed scheduled service call for ingesting new stories from HN in ${msToComplete}ms...`);
+        console.info(`[INFO:NewStories]...successfully saving ${total_stories_saved} new stories and ${total_users_saved} new users`);
     }
     catch (error) {
         console.error(`[ERROR:NewStories] ${error.message}`);
