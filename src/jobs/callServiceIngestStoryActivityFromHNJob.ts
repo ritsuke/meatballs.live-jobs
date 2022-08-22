@@ -68,7 +68,9 @@ export default ({
           queryString += `&falloff=${falloff}`
         }
 
-        console.info(queryString)
+        console.info(
+          `[INFO:StoryActivity:${name}] using query string: ${queryString}`
+        )
 
         const requestUrl = `${
           process.env.NODE_ENV === 'development'
