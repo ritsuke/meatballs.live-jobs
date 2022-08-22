@@ -4,7 +4,7 @@ import cron from 'cron'
 import fetch from 'node-fetch'
 
 interface IngestRequestResponse {
-  data: { total_stories_saved: number; total_users_saved: number }
+  data: { new_stories_saved: number; new_users_saved: number }
 }
 
 // Scheduled Service Call: ingest new stories from HN (default: every minute)
@@ -32,7 +32,7 @@ export default new cron.CronJob(
             Authorization: `Bearer ${process.env.INGEST_API_KEY}`
           }
         }),
-        { total_stories_saved, total_users_saved } = (
+        { new_stories_saved, new_users_saved } = (
           (await response.json()) as IngestRequestResponse
         ).data,
         msToComplete = Date.now() - startTime
@@ -43,7 +43,7 @@ export default new cron.CronJob(
         `[INFO:NewStories] completed scheduled service call for ingesting new stories from HN in ${msToComplete}ms...`
       )
       console.info(
-        `[INFO:NewStories]...successfully saving ${total_stories_saved} new stories and ${total_users_saved} new users`
+        `[INFO:NewStories]...successfully saving ${new_stories_saved} new stories and ${new_users_saved} new users`
       )
     } catch (error) {
       console.error(`[ERROR:NewStories] ${(error as Error).message}`)

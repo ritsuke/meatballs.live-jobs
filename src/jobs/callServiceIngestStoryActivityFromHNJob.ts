@@ -5,8 +5,8 @@ import fetch from 'node-fetch'
 
 interface IngestRequestResponse {
   data: {
-    totalStoriesUpdatedWithLatestScore: number
-    totalStoriesUpdatedWithLatestCommentTotal: number
+    stories_updated_with_latest_score: number
+    stories_updated_with_latest_comment_total: number
   }
 }
 
@@ -83,8 +83,8 @@ export default ({
             }
           }),
           {
-            totalStoriesUpdatedWithLatestScore,
-            totalStoriesUpdatedWithLatestCommentTotal
+            stories_updated_with_latest_score,
+            stories_updated_with_latest_comment_total
           } = ((await response.json()) as IngestRequestResponse).data,
           msToComplete = Date.now() - startTime
 
@@ -94,7 +94,7 @@ export default ({
           `[INFO:StoryActivity:${name}] completed scheduled service call for ingesting story activity from HN in ${msToComplete}ms...`
         )
         console.info(
-          `[INFO:StoryActivity:${name}] ...successfully updating ${totalStoriesUpdatedWithLatestScore} story scores and ${totalStoriesUpdatedWithLatestCommentTotal} story comment totals`
+          `[INFO:StoryActivity:${name}] ...successfully updating ${stories_updated_with_latest_score} story scores and ${stories_updated_with_latest_comment_total} story comment totals`
         )
       } catch (error) {
         console.error(
