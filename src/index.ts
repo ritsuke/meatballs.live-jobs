@@ -6,7 +6,9 @@ import {
   callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_1,
   callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_2,
   callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_3,
-  callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_4
+  callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_4,
+  callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_5,
+  callServiceIngestStoryActivityFromHNJob as callServiceIngestStoryActivityFromHNJob_6
 } from './jobs'
 
 console.info(`[INFO] ENVIRONMENT: ${process.env.NODE_ENV}`)
@@ -128,6 +130,46 @@ if (process.env.SOURCE_HN_STORY_ACTIVITY_PAUSED !== 'true') {
         : undefined,
       commentTotal: process.env.SOURCE_HN_STORY_ACTIVITY_4_GATE_COMMENT_TOTAL
         ? parseInt(process.env.SOURCE_HN_STORY_ACTIVITY_4_GATE_COMMENT_TOTAL)
+        : undefined
+    },
+    commentWeight,
+    falloff
+  }).start()
+
+  // 24-36 hours old
+  callServiceIngestStoryActivityFromHNJob_5({
+    name: '5',
+    cronTime: process.env.SOURCE_HN_STORY_ACTIVITY_5_CRON_TIME,
+    range: {
+      start: 24,
+      end: 36
+    },
+    gate: {
+      score: process.env.SOURCE_HN_STORY_ACTIVITY_5_GATE_SCORE
+        ? parseInt(process.env.SOURCE_HN_STORY_ACTIVITY_5_GATE_SCORE)
+        : undefined,
+      commentTotal: process.env.SOURCE_HN_STORY_ACTIVITY_5_GATE_COMMENT_TOTAL
+        ? parseInt(process.env.SOURCE_HN_STORY_ACTIVITY_5_GATE_COMMENT_TOTAL)
+        : undefined
+    },
+    commentWeight,
+    falloff
+  }).start()
+
+  // 36-48 hours old
+  callServiceIngestStoryActivityFromHNJob_6({
+    name: '6',
+    cronTime: process.env.SOURCE_HN_STORY_ACTIVITY_6_CRON_TIME,
+    range: {
+      start: 36,
+      end: 48
+    },
+    gate: {
+      score: process.env.SOURCE_HN_STORY_ACTIVITY_6_GATE_SCORE
+        ? parseInt(process.env.SOURCE_HN_STORY_ACTIVITY_6_GATE_SCORE)
+        : undefined,
+      commentTotal: process.env.SOURCE_HN_STORY_ACTIVITY_6_GATE_COMMENT_TOTAL
+        ? parseInt(process.env.SOURCE_HN_STORY_ACTIVITY_6_GATE_COMMENT_TOTAL)
         : undefined
     },
     commentWeight,
