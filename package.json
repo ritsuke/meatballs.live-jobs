@@ -1,7 +1,7 @@
 {
-  "name": "meatballs.live-cron-jobs",
+  "name": "meatballs.live-jobs",
   "version": "0.0.1",
-  "repository": "git@github.com:ritsuke/meatballs.live-cron-jobs.git",
+  "repository": "git@github.com:ritsuke/meatballs.live-jobs.git",
   "author": "ritsuke <ritsuke@gmail.com>",
   "license": "MIT",
   "type": "module",
