@@ -4,7 +4,9 @@ import cron from 'cron'
 import fetch from 'node-fetch'
 
 interface IngestRequestResponse {
-  data: {
+  success: boolean
+  error?: { message: string }
+  data?: {
     stories_updated_with_latest_score: number
     stories_updated_with_latest_comment_total: number
   }
@@ -35,6 +37,10 @@ export default ({
   const cronJob = new cron.CronJob(
     cronTime || '* * * * *',
     async () => {
+      const servicesEndpoint = process.env.SERVICES_ENDPOINT
+
+      if (!servicesEndpoint) throw 'missing services endpoint; check env'
+
       try {
         const startTime = Date.now()
 
@@ -72,22 +78,31 @@ export default ({
           `[INFO:StoryActivity:${name}] using query string: ${queryString}`
         )
 
-        const requestUrl = `${
-          process.env.NODE_ENV === 'development'
-            ? 'http://localhost:3000'
-            : 'https://www.meatballs.live'
-        }/api/services/ingest/story-activity${queryString}`
+        const requestUrl = `${servicesEndpoint}/ingest/story-activity${queryString}`
 
         const response = await fetch(requestUrl, {
-            method: 'POST',
-            headers: {
-              Authorization: `Bearer ${process.env.INGEST_API_KEY}`
-            }
-          }),
-          {
+          method: 'POST',
+          headers: {
+            Authorization: `Bearer ${process.env.INGEST_API_KEY}`
+          }
+        })
+
+        const { error, data } = (await response.json()) as IngestRequestResponse
+
+        if (!data || error) {
+          console.error(
+            `[ERROR:StoryActivity:${name}] unable to complete service call... ${
+              error?.message || 'unknown error'
+            }`
+          )
+
+          return
+        }
+
+        const {
             stories_updated_with_latest_score,
             stories_updated_with_latest_comment_total
-          } = ((await response.json()) as IngestRequestResponse).data,
+          } = data,
           msToComplete = Date.now() - startTime
 
         // TODO: post msToComplete to _status service
